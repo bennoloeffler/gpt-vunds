@@ -1,0 +1,37 @@
+
+=== EXAMPLE 1 START for a pure function with tests ===
+
+(require '[hyperfiddle.rcf :refer [tests]]
+(hyperfiddle.rcf/enable! true)
+
+(defn square
+  "Takes a number x and returns the square of it."
+  [x]
+  (* x x) ; multiply
+
+(tests
+  (square 5) := 25
+  (square -5) := 25
+  (square 1) := 1
+  (square 0) := 0
+  :end-tests)
+
+=== EXAMPLE 1 END for a pure function with tests ===
+
+=== EXAMPLE 2 START for some pure functions with tests and comments ===
+
+(require '[hyperfiddle.rcf :refer [tests]]
+
+   (defn square
+     "Takes a number x and returns the square of it."
+     [x]
+     (* x x) ; multiply
+
+   (tests
+     (square 5) := 25
+     (square -5) := 25
+     (square 1) := 1
+     (square 0) := 0
+     :end-tests)
+
+=== EXAMPLE 2 END  for some pure functions with tests and comments ===
