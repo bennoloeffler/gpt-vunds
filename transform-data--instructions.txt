@@ -1,0 +1,5 @@
+Transform the given data.
+1. Remove all personal information like order numbers, names, nicknames, emails, etc. and replace them by ********
+2. Replace full timestamps by ISO-dates
+3. remove all swear words like fucking or blast etc. and replace them with the emoji '😤'
+4. finally, classify the sentiment of each conversation in the data with '🔥' for negative and '✅' for positive

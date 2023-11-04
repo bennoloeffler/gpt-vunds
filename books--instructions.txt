@@ -1,0 +1,17 @@
+Help me find some groundbreaking books.
+
+0. don't browse the internet. Just give me an indication based on your data.
+
+1. only return books that are older than 20 years.
+
+2. give me books that have been best sellers.
+
+3. show me a list of
+    - Author
+    - Titel
+    - Year of publication
+    - a short summary of the book. About 5 sentences.
+    - ISBN
+
+4. format the summary with a width of 80 characters at most.
+

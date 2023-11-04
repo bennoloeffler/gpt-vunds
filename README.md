@@ -1,44 +1,84 @@
 # gpt-vunds
 
-FIXME: description
+examples for openai api usage in clojure.
+- simple prompts.  
+- enhanced prompts.   
+- very simplistic local embedding db.  
 
 ## Installation
 
-Download from http://example.com/FIXME.
+```
+git clone https://github.com/bennoloeffler/gpt-vunds.git
+lein uberjar
+chmod u+x ./gpt-vunds
+```
+then put the folder of the script 
+```
+./gpt-vunds
+```
+into the path. E.g. put the following line into your .bashrc
+```
+export PATH=$HOME/projects/gpt-vunds:$PATH
+```
 
 ## Usage
 
-FIXME: explanation
+    $ java -jar target/uberjar/gpt-vunds-0.1.0-SNAPSHOT-standalone.jar books
+or short
+```
+$ gpt-vunds books
+``` 
 
-    $ java -jar gpt-vunds-0.1.0-standalone.jar [args]
+You will get a list of famous books.
+Then have a look at those example files:
 
-## Options
+```
+books--instructions.txt  
+books--examples.txt  
+books--prompt.txt  
+```
+You may also ignore the books--prompt.txt
+and provide your question as parameter:
 
-FIXME: listing of options this app accepts.
 
-## Examples
+    $ gpt-vunds books "provide 3 famous autobiographies of german business people" 
 
-...
+So basically, you need to write 2 files to create a specific prompt:  
+```
+xxx--instructions.txt  
+xxx--examples.txt
+```  
+you may optionally write your specific prompt data into  
+```
+xxx--prompt.txt
+```
+but you may override it by a parameter
 
-### Bugs
+    $ gpt-vunds xxx "here is the specific prompt that uses xxx--instructions.txt and xxx--examples.txt" 
 
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+As soon as you need to put a massive amount of data to the prompt,  
+use the file xxx-prompt.txt,
+Have a look at the example:
+```
+transform-data--prompt.txt
+transform-data--instructions.txt
+transform-data--examples.txt
+```
 
 ## License
+http://www.wtfpl.net/
 
-Copyright © 2023 FIXME
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+Version 2, December 2004
 
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
+Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
 
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+Everyone is permitted to copy and distribute verbatim or modified
+copies of this license document, and changing it is allowed as long
+as the name is changed.
+
+DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
+
+TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
+
+0. You just DO WHAT THE FUCK YOU WANT TO.

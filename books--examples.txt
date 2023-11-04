@@ -1,0 +1,26 @@
+
+=== EXAMPLE START ===
+
+1.
+Author:  Peter F. Drucker
+Title:   The Effective Executive
+Year:    1967
+ISBN:    978-0-545-01022-1
+Summary: This book is a classic in management literature. Drucker emphasizes that
+         being effective is a learned skill. He explores the time management and
+         decision-making habits that make executives effective, and discusses the
+         importance of focusing on contribution and results, building on strengths,
+         and prioritizing tasks.
+
+
+2.
+Author:  Tom Peters and Robert H. Waterman Jr.
+Title:   "In Search of Excellence"
+Year:    1982
+ISBN:    978-0-545-04522-1.
+Summary: The authors studied successful companies in the United States to find out what
+         made them excellent. They identified eight common themes which they argued were
+         responsible for the success of these corporations, including a bias for action,
+         staying close to the customer, and fostering a productive work environment.
+
+=== EXAMPLE END===

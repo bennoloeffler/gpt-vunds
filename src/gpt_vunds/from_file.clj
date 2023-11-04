@@ -9,7 +9,7 @@
 
 
 
-(defn read-files-to-prompt [base-name]
+(defn read-files-to-prompt [base-name arg-prompt]
   (try (let [_ (println "trying to read 3 files:")
              instr (str base-name "--instructions.txt")
              _ (println "reading file:" instr)
@@ -18,8 +18,8 @@
              _ (println "reading file:" examp)
              examp-data (slurp examp)
              promp (str base-name "--prompt.txt")
-             _ (println "reading file:" promp)
-             promp-data (slurp promp)
+             _ (when-not arg-prompt (println "reading file:" promp))
+             promp-data (or arg-prompt (slurp promp))
              complete-prompt (str "==== GENERAL INSTRUCIONS ====\n"
                                   instr-data
                                   "\n\n==== EXAMPLES ====\n"
@@ -57,16 +57,28 @@
 
 (defn print-help []
   (println "Wrong arguments!")
-  (println "Please provide ONLY ONE PARAMETER as base-name for three files...")
+  (println "Please provide ONE OR TWO OPTIONS!")
+  (println "first: base-name for config-files")
+  (println "second: your prompt (optional)")
+  (println "Example 1")
+  (println "gpt-vunds books \"suggest me a list of  ")
+  (println "---- only ONE parameter")
   (println "Parameter 'employee-names' will result in reading the files:")
   (println "'employee-names--instructions.txt' contains STABLE, general instructions")
   (println "'employee-names--examples.txt'     contains EXAMPLES for INPUT and expected OUTPUT")
-  (println "'employee-names--user-prompt.txt'  contains YOUR SPECIFIC INPUT for the request."))
+  (println "'employee-names--user-prompt.txt'  contains YOUR SPECIFIC INPUT for the request.")
+  (println "")
+  (println "---- TWO parameters")
+  (println "Parameter 'employee-names' will result in reading the files:")
+  (println "'employee-names--instructions.txt' contains STABLE, general instructions")
+  (println "'employee-names--examples.txt'     contains EXAMPLES for INPUT and expected OUTPUT")
+  (println "'employee-names--user-prompt.txt'  WILL BE IGNORED.")
+  (println "instead, the second parameter will be used as prompt."))
 
 (defn -main [& args]
-  (if (= 1 (count args))
+  (if (<= 1 (count args) 2)
     (let [base-name (first args)
-          result (read-files-to-prompt base-name)
+          result (read-files-to-prompt base-name (second args))
           error (:error result)
           prompt (:data result)]
       (if prompt
@@ -85,9 +97,9 @@
               data (if clj-str
                      (read-string (str "[" clj-str"]"))
                      content)]
-          (cprint content)
-          (println "\n\nPURE CLJ:")
+          (println content)
           (when clj-str
+            (println "\n\nPURE CLJ:")
             (println clj-str)))
             ;(cprint data)
             ;(println "\n\nEXECUTING clojure:")
@@ -98,5 +110,5 @@
 
 (comment
 
-  (-main "clj"))
+  (-main "books" "provide famous autobiographies of german people in business"))
 

@@ -1,0 +1,27 @@
+
+=== Example Input: ===
+[support_tom] 2023-07-24T10:02:23+00:00 : What can I help you with?
+[johndoe] 2023-07-24T10:03:15+00:00 : I CAN'T CONNECT TO MY BLASTED ACCOUNT
+[support_tom] 2023-07-24T10:03:30+00:00 : Alex, are you sure it's not your caps lock?
+[johndoe] 2023-07-24T10:04:03+00:00 : Blast! You're right!
+
+[support_ben] 2023-10-11T09:44:22+00:00: Good morning! How may I assist you?
+[susan_p] 2023-10-11T09:44:55+00:00: Hello, I'd like to know the status of my order.
+[support_ben] 2023-10-11T09:45:15+00:00: Of course, Susan. Could you please provide me with the order number?
+[susan_p] 2023-10-11T09:45:40+00:00: It's 717171.
+
+
+=== Example Output: ===
+🔥
+[Agent] 2023-07-24 : What can I help you with?
+[Customer] 2023-07-24 : I CAN'T CONNECT TO MY 😤 ACCOUNT
+[Agent] 2023-07-24 : ********, are you sure it's not your caps lock?
+[Customer] 2023-07-24 : 😤! You're right!
+
+✅
+[Agent] 2023-10-11: Good morning! How may I assist you?
+[Customer] 2023-10-11: Hello, I'd like to know the status of my order.
+[Agent] 2023-10-11: Of course, ********. Could you please provide me with the order number?
+[Customer] 2023-10-11: It's ********.")
+
+
