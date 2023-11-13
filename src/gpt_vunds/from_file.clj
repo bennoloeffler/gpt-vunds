@@ -3,7 +3,8 @@
     [clojure.string :as str]
     [wkok.openai-clojure.api :as api]
     [puget.printer :refer [cprint]]
-    [hyperfiddle.rcf :refer [tests]])
+    [hyperfiddle.rcf :refer [tests]]
+    [gpt-vunds.streaming :as streaming])
   (:gen-class))
 
 
@@ -75,6 +76,7 @@
   (println "'employee-names--user-prompt.txt'  WILL BE IGNORED.")
   (println "instead, the second parameter will be used as prompt."))
 
+
 (defn -main [& args]
   (if (<= 1 (count args) 2)
     (let [base-name (first args)
@@ -90,6 +92,44 @@
                                         {:role "user"
                                          :content prompt}]}
               _           (println (str "PROMPT:\n" prompt))
+              result (try (streaming/stream-api prompt-config
+                                                (fn [chunk] (print chunk) (flush))
+                                                (fn [] (println "\n\nDONE! Next?")))
+                          (catch Exception e (println (ex-message e))))])
+
+
+        (println "there was an issue assembling the prompt:\n" error)))
+    (print-help)))
+
+(comment
+  (-main "books" "provide famous autobiographies of german people in business")
+  (-main "clj" "show me how :on-key-pressed can catch return key."))
+
+(comment
+  ; this could be the 'main loop' for interactive use
+  (loop []
+    (println  "Enter a number: ")
+    (let [b (read-line)]
+      (println "your val:" b)
+      (recur))))
+
+
+
+
+(defn old-main [& args]
+  (if (<= 1 (count args) 2)
+    (let [base-name (first args)
+          result (read-files-to-prompt base-name (second args))
+          error (:error result)
+          prompt (:data result)]
+      (if prompt
+        (let [prompt-config {:model "gpt-4" ;"gpt-3.5-turbo"
+                             :temperature 0.0
+                             :messages [{:role "system"
+                                         :content "You diligently complete tasks as instructed.\nYou never make up any information that isn't there."} ; You don't invent things.
+                                        {:role "user"
+                                         :content prompt}]}
+              _           (println (str "PROMPT:\n" prompt "\n\n"))
               result (try (api/create-chat-completion prompt-config)
                           (catch Exception e (println (ex-message e))))
               content (-> result :choices (get 0) :message :content)
@@ -101,14 +141,11 @@
           (when clj-str
             (println "\n\nPURE CLJ:")
             (println clj-str)))
-            ;(cprint data)
-            ;(println "\n\nEXECUTING clojure:")
-            ;(load-string clj-str)
+        ;(cprint data)
+        ;(println "\n\nEXECUTING clojure:")
+        ;(load-string clj-str)
 
         (println "there was an issue assembling the prompt:\n" error)))
     (print-help)))
 
-(comment
-
-  (-main "books" "provide famous autobiographies of german people in business"))
 

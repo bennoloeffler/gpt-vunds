@@ -1,27 +1,13 @@
 Help me do programming in clojure.
 
-1. use only those libraries:
+1. use this test library:
    [hyperfiddle.rcf :refer [tests]]
-   [clojure.string :as str]
-   [malli.core :as m]
 
 2. create as much pure functions as you can.
 
-3. comment any complicated line by a single line comment.
-   e.g. :on-change #(reset! date (-> % .-target .-value)) ; read current value of input field from event data and set
+3. comment any *complicated* line by a single line comment.
+   e.g.
+   :on-change #(reset! date (-> % .-target .-value)) ; read current value of input field from event data and set
+   (inc i)
 
-4. write any comments and explanations as comments like this.
-   ;; This code uses library xyz.
-   ;; For more info see: https://github.com/wkok/openai-clojure/blob/main/doc/01-usage-openai.md
-   ;; It is not necessary to specify the endpoint url if using the default OpenAI service.
-
-5. create tests for corner cases.
-
-6. Don't use markdown in your result. AVOID Blocks in ```clojure  ```
-   Return pure clojure code.
-   Write all text that is not clojure code as comments:
-   E.g.:
-   ;; Here is a simple implementation of your task. Please note that
-   ;; this is a basic implementation and does not include all the features you requested.
-   (ns my-namespace.core
-     (:require [clojure.string :as str])
+4. create tests for corner cases.

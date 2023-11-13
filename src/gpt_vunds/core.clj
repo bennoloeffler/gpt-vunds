@@ -7,19 +7,27 @@
 
 ;; 1. by credits on https://platform.openai.com/account/billing/overview
 ;;    otherwise, you get an error: 429
+;;
 ;; 2. put your API-KEY in shell variable OPENAI_API_KEY:
 ;;    export OPENAI_API_KEY=sd-1dx4K6dO....x4K6dOx4K6dO
 ;;    e.g. in .zshrc or .bashrc
+;;
 ;; 3. use a lib to access the http endpoints of the openapi
 ;;    https://github.com/wkok/openai-clojure
 ;;    lein: [net.clojars.wkok/openai-clojure "0.11.0"]
 ;;          (:require [wkok.openai-clojure.api :as api])
+;;
 ;; 4. use prompt engineering to solve real tasks
+;; https://www.youtube.com/watch?v=_ZvnD73m40o
 ;; https://clojureverse.org/t/scicloj-llm-meetup-2-prompt-engineering-managing-embeddings-summary-recording/10141
 ;; https://realpython.com/practical-prompt-engineering/
 ;; git: https://github.com/realpython/materials/tree/master/prompt-engineering/
 ;; https://www.thedataschool.com.au/daniel-lawson/using-chatgpt-to-parse-unstructured-text/
 ;; Extract Address data: https://www.thedataschool.com.au/daniel-lawson/using-chatgpt-to-parse-unstructured-text/
+;;
+;; 5. general AI
+;; https://leanpub.com/clojureai
+
 
 
 (comment

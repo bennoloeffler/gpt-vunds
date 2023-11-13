@@ -3,7 +3,16 @@
 examples for openai api usage in clojure.
 - simple prompts.  
 - enhanced prompts.   
-- very simplistic local embedding db.  
+- very simplistic local embedding db.
+- streaming answers word by word
+
+the most interesting part is not to run the code  
+but to have a look to `tutorial.clj` and get and  
+understanding of how it works.  
+Start a repl and have fun.
+
+But if you want to run it:  
+install and run it...
 
 ## Installation
 
@@ -40,7 +49,6 @@ books--prompt.txt
 You may also ignore the books--prompt.txt
 and provide your question as parameter:
 
-
     $ gpt-vunds books "provide 3 famous autobiographies of german business people" 
 
 So basically, you need to write 2 files to create a specific prompt:  
@@ -52,7 +60,7 @@ you may optionally write your specific prompt data into
 ```
 xxx--prompt.txt
 ```
-but you may override it by a parameter
+but you may override xxx-prompt.txt by a parameter
 
     $ gpt-vunds xxx "here is the specific prompt that uses xxx--instructions.txt and xxx--examples.txt" 
 
@@ -64,6 +72,14 @@ transform-data--prompt.txt
 transform-data--instructions.txt
 transform-data--examples.txt
 ```
+## TODOs
+- function callings:  
+  https://semaphoreci.com/blog/function-calling  
+  https://platform.openai.com/docs/guides/function-calling/function-calling
+- assistants:  
+  https://platform.openai.com/docs/api-reference/assistants
+- exlore alternatives:  
+  https://cohere.com/
 
 ## License
 http://www.wtfpl.net/
