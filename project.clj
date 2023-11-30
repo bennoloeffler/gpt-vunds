@@ -4,7 +4,7 @@
   :license {:name "WTFPL"
             :url "http://www.wtfpl.net/"}
   :dependencies [[org.clojure/clojure "1.11.1"]
-                 [net.clojars.wkok/openai-clojure "0.11.0"]
+                 [net.clojars.wkok/openai-clojure "0.14.0"]
                  [com.hyperfiddle/rcf "20220926-202227"]
                  [metosin/malli "0.11.0"]
                  [mvxcvi/puget "1.3.4"]

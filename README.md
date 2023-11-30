@@ -7,7 +7,7 @@ examples for openai api usage in clojure.
 - streaming answers word by word
 
 the most interesting part is not to run the code  
-but to have a look to `tutorial.clj` and get and  
+but to have a look to `src/gpt-vunds/tutorial.clj` and get and  
 understanding of how it works.  
 Start a repl and have fun.
 

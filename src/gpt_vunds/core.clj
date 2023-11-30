@@ -314,8 +314,8 @@ Deutsche Messe Technology Academy
 Messegelände / Pavillon 36
 30521 Hannover
 www.zukunftsallianz-maschinenbau.de
-Umsatz: keine Daten
-Mitarbeiter: keine Daten
+Umsatz: 0 - 10 Mio EUR
+Mitarbeiter: 3 - 10
 
 
  === Example Input 2: ===\n
@@ -364,6 +364,8 @@ Transform the given data.
      postal code and town
      street and number
      domain
+     turnover
+     number of employees
 
 2. if there are only parts of the requested fields available, provide those, eg:
    person:
@@ -376,8 +378,9 @@ Transform the given data.
 6. search for
     - the approximate, roughly estimated number of employees and
     - the approximate, roughly estimated turnover of each company
-   Provide a range, e.g. 100 Mio - 500 Mio EUR, for the turnover estimation.
-   Provide a range, e.g. 700 - 2000, for the emplyees estimation.
+   Browse the internet, if needed.
+   Turnoer-data: Provide a range, e.g. 100 Mio - 500 Mio EUR, if no better data is available.
+   Employee-data: Provide a range, e.g. 700 - 2000, if no better data is available
    Provide even rough estimations instead of no data.
 7. Place the turnover and employee estimation range at the end of the company data.
    ")
@@ -428,21 +431,25 @@ Umsatz: 200 Mio - 500 Mio Euro
 ")
 
 (def data-company-data
-  #_"RAFI GmbH & Co. KG\nRavensburger Straße 128-134\n88276 Berg\n"
-  "mimatic GmbH\nWestendstraße 3\n87488 Betzigau (Germany)
-  ruhlamat GmbH\nSonnenacker 2, D-99819 Marksuhl"
+  "RAFI GmbH & Co. KG\nRavensburger Straße 128-134\n88276 Berg\n
+
+  mimatic GmbH\nWestendstraße 3\n87488 Betzigau (Germany)
+
+  ruhlamat GmbH\nSonnenacker 2, D-99819 Marksuhl,
+
+  Bosch Rexroth AG\nZum Eisengießer 1\n97816 Lohr am Main"
   #_"HORSCH Maschinen GmbH")
 
 (def instruction-company-data
   "
 Find data of the given company:
 
-1. Please don't access real-time data, but try to find
-    - the approximate, roughly estimated number of employees and
-    - the approximate, roughly estimated turnover of each company
-   Provide a range, e.g. 100 Mio - 500 Mio EUR, for the turnover estimation.
-   Provide a range, e.g. 700 - 2000, for the emplyees estimation.
-   Provide even rough estimations instead of no data.
+1. Please provide the following data for each company:
+    - the number of employees and
+    - the  turnover of each company
+   Provide a range, e.g. 100 Mio - 500 Mio EUR, for the turnover.
+   Provide a range, e.g. 700 - 2000, for the emplyees number.
+   Provide even rough numbers instead of no data.
 2. Provide only turnover and employee data in the result.
 
    ")

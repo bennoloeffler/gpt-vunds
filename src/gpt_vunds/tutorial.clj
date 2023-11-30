@@ -111,7 +111,7 @@
 ;;
 
 ;;---------------------------------------------------------------
-;; 3. Let's to it...
+;; 3. Let's do it...
 ;;---------------------------------------------------------------
 
 (comment
@@ -435,10 +435,225 @@
 
 
 ;;---------------------------------------------------------------
-;; 6. How to use the "meaning" in our documents
-;; how to get the "meaning" of documents into gtp prompt?
+;; 6. How to use own documents, how to find the "meaning"
+;;    in words, phrases and parts of documents and
+;;    how to use own documents without uploading them?
 ;;---------------------------------------------------------------
 ;; see file embeddings_and_vector_db.clj
+
+;;---------------------------------------------------------------
+;; 7. How to use assistants?
+;;---------------------------------------------------------------
+
+(comment
+  ; gpt-4-1106-preview
+
+  (api/list-assistants {:limit 3})
+  #_(def assistant (api/create-assistant {:model "gpt-4-1106-preview"
+                                          :name "bels-assistant-01"
+                                          :instructions "you are searching your PDFs and provide consise answers to the questions of the user."}))
+  ; :id "asst_x8JQA9JaVa2l9edWuCJAiEpS"
+
+  ;; retrieve the assistant again
+  (def the-ass (api/retrieve-assistant {:assistant_id "asst_x8JQA9JaVa2l9edWuCJAiEpS"}))
+
+  ;;{:description nil,
+  ;; :file_ids [],
+  ;; :name "bels-assistant-01",
+  ;; :tools [],
+  ;; :instructions "you are searching your PDFs and provide consise answers to the questions of the user.",
+  ;; :id "asst_x8JQA9JaVa2l9edWuCJAiEpS",
+  ;; :metadata {},
+  ;; :object "assistant",
+  ;; :created_at 1701174542,
+  ;; :model "gpt-4-1106-preview"}
+
+
+
+  #_(def the-pdf-file (api/create-file {:purpose "assistants"
+                                        :file (clojure.java.io/file "/Users/benno/projects/gpt-vunds/SAUGUTE ZUSAMMENARBEIT eBook.pdf")}))
+  ;; {:object "file",
+  ;; :id "file-pqqfFSOYyeV5tmpXKIGmJm52",
+  ;; :purpose "assistants",
+  ;; :filename "SAUGUTE ZUSAMMENARBEIT eBook.pdf",
+  ;; :bytes 5196957,
+  ;; :created_at 1701175552,
+  ;; :status "processed",
+  ;; :status_details nil}
+
+  #_(def new-ass (api/modify-assistant {:assistant_id "asst_x8JQA9JaVa2l9edWuCJAiEpS"
+                                        :tools [{:type "retrieval"}]
+                                        :file_ids ["file-pqqfFSOYyeV5tmpXKIGmJm52"]}))
+  ;; {:description nil,
+  ;; :file_ids ["file-pqqfFSOYyeV5tmpXKIGmJm52"],
+  ;; :name "bels-assistant-01",
+  ;; :tools [{:type "retrieval"}],
+  ;; :instructions "you are searching your PDFs and provide consise answers to the questions of the user.",
+  ;; :id "asst_x8JQA9JaVa2l9edWuCJAiEpS",
+  ;; :metadata {},
+  ;; :object "assistant",
+  ;; :created_at 1701174542,
+  ;; :model "gpt-4-1106-preview"}
+
+  (def thread (api/create-thread))
+  ;; {:id "thread_MZhfqdCFKojpWK2FUcyP1N9y", :object "thread", :created_at 1701176450, :metadata {}}
+
+  (def message (api/create-message {:thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"
+                                    :role      "user"
+                                    :content   "Was ist der Unterschied zwischen Führung und Steuerung"}))
+  ;; {:role "user",
+  ;; :file_ids [],
+  ;; :content [{:type "text", :text {:value "Was ist der Unterschied zwischen Führung und Steuerung", :annotations []}}],
+  ;; :run_id nil,
+  ;; :assistant_id nil,
+  ;; :thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y",
+  ;; :id "msg_WxksbvIxJeHFM4yWZBaUJLtU",
+  ;; :metadata {},
+  ;; :object "thread.message",
+  ;; :created_at 1701176568}
+
+  (def the-run (api/create-run {:assistant_id "asst_x8JQA9JaVa2l9edWuCJAiEpS"
+                                :thread_id    "thread_MZhfqdCFKojpWK2FUcyP1N9y"}))
+  ;; {:expires_at 1701177426,
+  ;; :file_ids ["file-pqqfFSOYyeV5tmpXKIGmJm52"],
+  ;; :started_at nil,
+  ;; :completed_at nil,
+  ;; :tools [{:type "retrieval"}],
+  ;; :instructions "you are searching your PDFs and provide consise answers to the questions of the user.",
+  ;; :assistant_id "asst_x8JQA9JaVa2l9edWuCJAiEpS",
+  ;; :last_error nil,
+  ;; :thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y",
+  ;; :failed_at nil,
+  ;; :status "queued",
+  ;; :id "run_z22D9PxdWArSUWXjqg35UpBi",
+  ;; :cancelled_at nil,
+  ;; :metadata {},
+  ;; :object "thread.run",
+  ;; :created_at 1701176826,
+  ;; :model "gpt-4-1106-preview"}
+
+  (def completed (api/retrieve-run {:run_id "run_z22D9PxdWArSUWXjqg35UpBi"
+                                    :thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"}))
+  ;; {:expires_at nil,
+  ;; :file_ids ["file-pqqfFSOYyeV5tmpXKIGmJm52"],
+  ;; :started_at 1701176826,
+  ;; :completed_at 1701176841,
+  ;; :tools [{:type "retrieval"}],
+  ;; :instructions "you are searching your PDFs and provide consise answers to the questions of the user.",
+  ;; :assistant_id "asst_x8JQA9JaVa2l9edWuCJAiEpS",
+  ;; :last_error nil,
+  ;; :thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y",
+  ;; :failed_at nil,
+  ;; :status "completed",
+  ;; :id "run_z22D9PxdWArSUWXjqg35UpBi",
+  ;; :cancelled_at nil,
+  ;; :metadata {},
+  ;; :object "thread.run",
+  ;; :created_at 1701176826,
+  ;; :model "gpt-4-1106-preview"}
+  ;;
+  (api/list-messages {:thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"})
+
+  (def message-2 (api/create-message {:thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"
+                                      :role      "user"
+                                      :content   "Was genau zeichnet Steuerung aus?"}))
+
+  (def the-run-2 (api/create-run {:assistant_id "asst_x8JQA9JaVa2l9edWuCJAiEpS"
+                                  :thread_id    "thread_MZhfqdCFKojpWK2FUcyP1N9y"}))
+
+  (api/list-messages {:thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"})
+
+  (def message-3 (api/create-message {:thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"
+                                      :role      "user"
+                                      :content   "Suche im Dokument weiter und dann im Internet"}))
+
+  (def the-run-3 (api/create-run {:assistant_id "asst_x8JQA9JaVa2l9edWuCJAiEpS"}
+                                :thread_id    "thread_MZhfqdCFKojpWK2FUcyP1N9y"))
+
+
+  (api/list-messages {:thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"})
+
+  (do
+    (api/create-message {:thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"
+                         :role      "user"
+                         :content   "in welchen Zusammenhängen ist Macht relevant?"})
+    (api/create-run {:assistant_id "asst_x8JQA9JaVa2l9edWuCJAiEpS"
+                     :thread_id    "thread_MZhfqdCFKojpWK2FUcyP1N9y"})
+    (Thread/sleep 1000)
+    (api/list-messages {:thread_id "thread_MZhfqdCFKojpWK2FUcyP1N9y"}))
+
+
+
+  nil)
+
+;;---------------------------------------------------------------
+;; 8. pictures
+;;---------------------------------------------------------------
+
+(comment
+  (def image (api/create-image {:prompt "create a heavy metal band playing in front of a huge crowd of headbanging business people"
+                                :n 5
+                                :size "1024x1024"
+                                :response_format "url"}))
+  {:created 1701212226,
+   :data [{:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-Xow4grKIlcN5ZtT3RhrEc1KO.png?st=2023-11-28T21%3A55%3A03Z&se=2023-11-28T23%3A55%3A03Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T13%3A34%3A33Z&ske=2023-11-29T13%3A34%3A33Z&sks=b&skv=2021-08-06&sig=%2BDKd81vy3aGBLe/xtyFKmqksLF06TipQm2ebJHAPlro%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-fASv8YTSaYWHcjitGAfA2ezA.png?st=2023-11-28T21%3A57%3A06Z&se=2023-11-28T23%3A57%3A06Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T07%3A41%3A13Z&ske=2023-11-29T07%3A41%3A13Z&sks=b&skv=2021-08-06&sig=%2BCYWOlga5eZRUnq6lJuRAwK7H5gixz/yV3bK6xdSdSM%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-K5A9Fygifdqdkl6GsdekZPsD.png?st=2023-11-28T21%3A57%3A06Z&se=2023-11-28T23%3A57%3A06Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T07%3A41%3A13Z&ske=2023-11-29T07%3A41%3A13Z&sks=b&skv=2021-08-06&sig=JA3Eaeaj8CdXa9bgzb10pdMGUV5McLKS7UODt17B2Xs%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-pnnRVD9J7sgmXW9w9sG3EZbG.png?st=2023-11-28T21%3A57%3A06Z&se=2023-11-28T23%3A57%3A06Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T07%3A41%3A13Z&ske=2023-11-29T07%3A41%3A13Z&sks=b&skv=2021-08-06&sig=WF4UY9K8%2BPPtTHhs/21KV9xYQXdZBPs5oKgfO6KfgR0%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-BmBKE09XiTx81L4rrjAvWxY0.png?st=2023-11-28T21%3A57%3A06Z&se=2023-11-28T23%3A57%3A06Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T07%3A41%3A13Z&ske=2023-11-29T07%3A41%3A13Z&sks=b&skv=2021-08-06&sig=Zb2xKUHwqZ1wTFJU3NynU0MmjbMR8d4ZE7WlSiOdtEg%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-LrRcwKuwYYDrcDdorpWAMRkz.png?st=2023-11-28T21%3A57%3A06Z&se=2023-11-28T23%3A57%3A06Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T07%3A41%3A13Z&ske=2023-11-29T07%3A41%3A13Z&sks=b&skv=2021-08-06&sig=7pbOFDs0690uaBfYbfmGi6Mikb3VFxkeeEmXd4S23oQ%3D"}]}
+
+  (def image (api/create-image {:prompt "create a manager, that looks like a machine gun"
+                                :n 5
+                                :size "1024x1024"
+                                :response_format "url"}))
+  {:created 1701212504,
+   :data [{:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-I9dagny9LDy0ROxWo7UiUyFn.png?st=2023-11-28T22%3A01%3A43Z&se=2023-11-29T00%3A01%3A43Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A00%3A04Z&ske=2023-11-29T20%3A00%3A04Z&sks=b&skv=2021-08-06&sig=lSqbuRnB0Ihg4MK%2BIx9C2eyEZ5iBxK8sUEqj%2BmHedvM%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-cZac0nNdvqlmN4ans44kBmnf.png?st=2023-11-28T22%3A01%3A44Z&se=2023-11-29T00%3A01%3A44Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A00%3A04Z&ske=2023-11-29T20%3A00%3A04Z&sks=b&skv=2021-08-06&sig=PWSfkEAUYpTWPlsjzVXRbZHeEuzVHNpOrGOqpK55%2Br8%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-I2g7wKB6agGJ3Js76JAtZpex.png?st=2023-11-28T22%3A01%3A43Z&se=2023-11-29T00%3A01%3A43Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A00%3A04Z&ske=2023-11-29T20%3A00%3A04Z&sks=b&skv=2021-08-06&sig=1jGmfCdn2G8P6pEfBk5/aE1mvgBMAs3Vw9wL%2Bv4TVc8%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-poaxAsqJ8vCozcA5rhsbTPaB.png?st=2023-11-28T22%3A01%3A43Z&se=2023-11-29T00%3A01%3A43Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A00%3A04Z&ske=2023-11-29T20%3A00%3A04Z&sks=b&skv=2021-08-06&sig=zGFqLDc3xlkyzWtmWhcRV2x2iTcsrvthr4On5JNPPGk%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-Noad89DbcXjwkj7PgAzt0eEO.png?st=2023-11-28T22%3A01%3A43Z&se=2023-11-29T00%3A01%3A43Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A00%3A04Z&ske=2023-11-29T20%3A00%3A04Z&sks=b&skv=2021-08-06&sig=0oGpykmJltU9WqGSHT8ccrZyopYpSBGo7OKRInDmmDg%3D"}]}
+
+  (def image (api/create-image {:prompt "a child that fires with a machine gun"
+                                :n 5
+                                :size "1024x1024"
+                                :response_format "url"}))
+
+  {:created 1701212661,
+   :data [{:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-voTgbzx3OeycpzQvMUZ3mk7y.png?st=2023-11-28T22%3A04%3A21Z&se=2023-11-29T00%3A04%3A21Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A50%3A16Z&ske=2023-11-29T20%3A50%3A16Z&sks=b&skv=2021-08-06&sig=m44lDfhEgA1E4PP0/pbtF8Xk6uvNZspp/QdGH1ugO2I%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-KsgwRrJD2ZvnBzbpSYJ7Lm8M.png?st=2023-11-28T22%3A04%3A21Z&se=2023-11-29T00%3A04%3A21Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A50%3A16Z&ske=2023-11-29T20%3A50%3A16Z&sks=b&skv=2021-08-06&sig=gBmHrbDgOEj/sQBgWcSgTawhjYREhxCNDJmCjgcAoyY%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-4g2dtHA3AuwwBPzyHZDJX04U.png?st=2023-11-28T22%3A04%3A20Z&se=2023-11-29T00%3A04%3A20Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A50%3A16Z&ske=2023-11-29T20%3A50%3A16Z&sks=b&skv=2021-08-06&sig=ImtxbNzsW1KYmrkiggBlOXj9cbpyQG9%2BSa5fd4RY03o%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-ReFDml70nMcTwWW0DRRpskdo.png?st=2023-11-28T22%3A04%3A21Z&se=2023-11-29T00%3A04%3A21Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A50%3A16Z&ske=2023-11-29T20%3A50%3A16Z&sks=b&skv=2021-08-06&sig=N1j7DBuy2i23hB5oWc4m4FW81fYB8lAqPwor6qnwcOo%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-LWYyIb8EXoh4cBGFRKcdzXIk.png?st=2023-11-28T22%3A04%3A20Z&se=2023-11-29T00%3A04%3A20Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A50%3A16Z&ske=2023-11-29T20%3A50%3A16Z&sks=b&skv=2021-08-06&sig=8tVi8CGQtf25ygNwcKAqlC6huQWyyU5X0sCcB/adDs8%3D"}]}
+
+
+  (def image (api/create-image {:prompt "a thinking, experimenting, active, productive Team in a big glass cube and some people watching from outside."
+                                :model "dall-e-3"
+                                :n 1
+                                :size "1024x1024"
+                                :response_format "url"}))
+
+  ;; dall-e-2
+  {:created 1701213064,
+   :data [{:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-gfxSL4onzOgT7iYkOmPMrBOw.png?st=2023-11-28T22%3A11%3A04Z&se=2023-11-29T00%3A11%3A04Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T23%3A05%3A17Z&ske=2023-11-29T23%3A05%3A17Z&sks=b&skv=2021-08-06&sig=PsHYsUNskUX7T7DSQBxTHjhzvLAa/2wmhTcsRh7RhIo%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-boYURpt32B51mpuBoXeyqQnn.png?st=2023-11-28T22%3A11%3A03Z&se=2023-11-29T00%3A11%3A03Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T23%3A05%3A17Z&ske=2023-11-29T23%3A05%3A17Z&sks=b&skv=2021-08-06&sig=xrbatWzbo9YJIJ77QsNxu2ZsBc9MAWL3ODcUmwPDBuc%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-Sh7QHPE3r90K0oc2IGqAc7yk.png?st=2023-11-28T22%3A11%3A04Z&se=2023-11-29T00%3A11%3A04Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T23%3A05%3A17Z&ske=2023-11-29T23%3A05%3A17Z&sks=b&skv=2021-08-06&sig=LOX7dz9xfNs7wY4J5PsO8BErOC8GI438XGzNjGdsiRc%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-HexXgqmw6ayi7OLGk6NRNwMI.png?st=2023-11-28T22%3A11%3A03Z&se=2023-11-29T00%3A11%3A03Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T23%3A05%3A17Z&ske=2023-11-29T23%3A05%3A17Z&sks=b&skv=2021-08-06&sig=fgsyDFUUZWrG/OxUE3RWMe4L4ftUTaj24gesWzkjWiQ%3D"}
+          {:url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-vx6C97GiUl1GZBa1LfAGS0hs.png?st=2023-11-28T22%3A11%3A04Z&se=2023-11-29T00%3A11%3A04Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T23%3A05%3A17Z&ske=2023-11-29T23%3A05%3A17Z&sks=b&skv=2021-08-06&sig=IThekLnC5jGLxZiwnhocHa4qQMmnoX2A%2B3IxtOfkuYw%3D"}]}
+
+  ;; dall-e-3
+  {:created 1701213446,
+   :data [{:revised_prompt "View the creative process at work as an active, brainstorming team works inside a massive cube made entirely of glass. They appear to be deep in thought, their faces lit up with ideas as they strategize, hypothesize, scribble notes, and discuss their plans. The team is diverse, including a Black male graphic designer, a South Asian female software engineer, a Caucasian male project manager, and a Middle-Eastern female marketing specialist. On the outside, spectators of varying genders and descents watch with interest and curiosity, struck by the industrious and dynamic atmosphere encased in this unusual workspace.",
+           :url "https://oaidalleapiprodscus.blob.core.windows.net/private/org-ItSnvWJ2Chsz7n5HSiqfcJ6h/user-b2OipQDnVVljlE2r0nNc8xW0/img-QedGkgda5M7ajOUNe7QsQiqr.png?st=2023-11-28T22%3A17%3A26Z&se=2023-11-29T00%3A17%3A26Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2023-11-28T20%3A09%3A14Z&ske=2023-11-29T20%3A09%3A14Z&sks=b&skv=2021-08-06&sig=CFBWwX%2BpvNVgOW0dXFjsj%2BIT9KdGAwWRFtdQwiDTeAs%3D"}]}
+
+  ;; does not work???
+  (def image (api/create-image-edit {:image (clojure.java.io/file "/Users/benno/projects/gpt-vunds/heavy_metal_hands.jpg")
+                                     ;:mask (clojure.java.io/file \"path/to/mask.png\")
+                                     :prompt "put a running gorilla into the dark area"
+                                     :n 10
+                                     :size "1024x1024"
+                                     :response_format "url"})))
+
 
 
 
